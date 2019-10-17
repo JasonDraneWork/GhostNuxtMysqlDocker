@@ -7,7 +7,7 @@ services:
             dockerfile: Dockerfile
         container_name: ghostcms
         ports:
-            - 2368
+            - 2368:2368
         environment:
             # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
             database__client: mysql
@@ -27,14 +27,14 @@ services:
             dockerfile: Dockerfile
         container_name: mysqldb
         ports:
-            - 3306
+            - 3306:3306
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - /var/data/runtime/mysql:/var/lib/mysql   
+            - ./data/runtime/mysql:/var/lib/mysql   
         environment:
             MYSQL_DATABASE: sampledb
-            MYSQL_PASSWORD_FILE: example                                             //  /run/secrets/user_db_password
-            MYSQL_ROOT_PASSWORD_FILE: rootexample                           //  /run/secrets/root_db_password
+            MYSQL_PASSWORD: example                                             //  /run/secrets/user_db_password
+            MYSQL_ROOT_PASSWORD: rootexample                           //  /run/secrets/root_db_password
             MYSQL_USER: nonroot_user
         networks:
             - ghost_net
