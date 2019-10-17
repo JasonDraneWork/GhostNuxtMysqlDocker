@@ -1,0 +1,57 @@
+version: '3.7'
+services:
+    
+    ghost:
+        build: 
+            context:  ghost
+            dockerfile: Dockerfile
+        container_name: ghostcms
+        ports:
+            - 2368
+        environment:
+            # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
+            database__client: mysql
+            database__connection__host: db
+            database__connection__user: nonroot_user
+            database__connection__password: example                         // /run/secrets/user_db_password
+            database__connection__database: ghost
+        networks:
+            - ghost_net
+        logging:
+            driver: json-file
+        restart: always
+
+    db:
+        build: 
+            context:  mysql
+            dockerfile: Dockerfile
+        container_name: mysqldb
+        ports:
+            - 3306
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/data/runtime/mysql:/var/lib/mysql   
+        environment:
+            MYSQL_DATABASE: sampledb
+            MYSQL_PASSWORD_FILE: example                                             //  /run/secrets/user_db_password
+            MYSQL_ROOT_PASSWORD_FILE: rootexample                           //  /run/secrets/root_db_password
+            MYSQL_USER: nonroot_user
+        networks:
+            - ghost_net
+        secrets:
+            - root_db_password
+            - user_db_password
+        logging:
+            driver: json-file
+        restart: always
+     
+
+networks:
+    ghost_net:
+        external: true
+
+secrets:
+    root_db_password:
+        external: true
+    user_db_password:
+        external: true
