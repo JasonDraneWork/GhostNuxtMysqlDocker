@@ -12,9 +12,9 @@ services:
             # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
             database__client: mysql
             database__connection__host: db
-            database__connection__user: nonroot_user
-            database__connection__password: example                         // /run/secrets/user_db_password
-            database__connection__database: ghost
+            database__connection__user: root
+            database__connection__password: rootexample                         // /run/secrets/user_db_password
+            database__connection__database: sampledb
         networks:
             - ghost_net
         logging:
